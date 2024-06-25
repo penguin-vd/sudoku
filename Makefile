@@ -3,7 +3,7 @@ CXXFLAGS = -Wall -Wextra -g
 SRCS = ui_library.cpp sudoku.cpp components.cpp main.cpp
 BUILD_DIR = build
 
-MAIN = $(BUILD_DIR)/pm
+MAIN = $(BUILD_DIR)/sudoku
 
 .PHONY: depend clean run
 

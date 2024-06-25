@@ -1,3 +1,3 @@
 make clean
 make
-./build/pm $@
+./build/sudoku $@
