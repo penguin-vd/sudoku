@@ -158,7 +158,7 @@ int choice_popup(std::vector<std::string> &buffer, const std::string message,
         for (size_t i = 0; i < options.size(); ++i) {
             int option_pos = option_start_pos + (option_space * i) + (option_space / 2) - (options[i].size() / 2);
             insert_colored(center_buffer, style_buffer, option_pos, 6, options[i],
-                           choice == i ? "\033[7;3m" : "");
+                           static_cast<size_t>(choice) == i ? "\033[7;3m" : "");
         }
 
         add_border(center_buffer, width);
