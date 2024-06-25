@@ -1,11 +1,12 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
-#include <vector>
 #include <random>
+#include <vector>
+
 #include "ui_library.h"
 
 class Sudoku {
-public:
+   public:
     Sudoku();
     void generate(int count);
     void printBoard();
@@ -17,11 +18,11 @@ public:
     bool complete_board();
     bool place_hint();
 
-private:
+   private:
     std::vector<std::vector<point>> board;
     std::vector<std::vector<point>> solved_board;
     std::mt19937 rng;
-    
+
     bool solve_board();
     void fill_diagonal();
     void fill_box(int row, int col);

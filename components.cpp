@@ -1,9 +1,10 @@
 #include "components.h"
+
 #include "sudoku.h"
 #include "ui_library.h"
 
 void main_screen(std::vector<std::string> &buffer, int screen_width,
-               int screen_height) {
+                 int screen_height) {
     std::vector<std::string> options = {"Easy", "Medium", "Hard"};
     int choice = choice_popup(buffer, "Difficulty", options, screen_width);
     std::vector<styling> style_buffer;
@@ -15,8 +16,13 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
     int board_y = (screen_height / 2) - (11 / 2);
     size_t board_width = 3 * 9 + 2;
     char ch;
-    std::vector<std::string> info = {"Press \'0-9\' on a space to place a number,", "Press \'h\' to place an hint,", "Press \'r\' to reset the board,", "Press \'f\' to complete the board,", "Press \'q\' to quit."};
+    std::vector<std::string> info = {
+        "Press \'0-9\' on a space to place a number,",
+        "Press \'h\' to place an hint,", "Press \'r\' to reset the board,",
+        "Press \'f\' to complete the board,", "Press \'q\' to quit."};
     std::string title = "Welcome to Sudoku";
+    std::string difficulty = "Current Difficulty: ";
+    difficulty += choice == 0 ? "Easy" : choice == 1 ? "Medium" : "Hard";
     while (true) {
         clear_screen();
         int temp_width, temp_height;
@@ -30,29 +36,62 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
         } else {
             clear_buffer(buffer, screen_width);
         }
-        if (sudoku.is_board_completed()) {
-            std::vector<std::string> y_or_n = {"Yes", "No"};
-            int cont = choice_popup(buffer, "Board Completed! Want to play another game?", y_or_n, screen_width);
-            if (cont != 0) break;
-            int choice = choice_popup(buffer, "Difficulty", options, screen_width);
-            sudoku.generate((choice + 1) * 20);
-        }
-        sudoku.reset_style();
         style_buffer.clear();
+        sudoku.reset_style();
+
+        if (sudoku.is_board_completed()) {
+            std::vector<std::string> y_or_n = {"Yes", "No", "Show Board"};
+            int cont = 2;
+            bool quit = false;
+            while (cont == 2) {
+                cont = choice_popup(
+                    buffer, "Board Completed! Want to play another game?",
+                    y_or_n, screen_width);
+                if (cont == 1) {
+                    quit = true;
+                    break;
+                }
+
+                if (cont == 2) {
+                    style_buffer.clear();
+                    sudoku.reset_style();
+                    clear_buffer(buffer, screen_width);
+                    insert_board(buffer, style_buffer, sudoku.get_board(),
+                                 board_x, board_y + 1);
+                    draw_buffer(buffer, style_buffer);
+                    getchar();
+                }
+            }
+            if (quit) break;
+
+            int choice =
+                choice_popup(buffer, "Difficulty", options, screen_width);
+            sudoku.generate((choice + 1) * 20);
+            difficulty = "Current Difficulty: ";
+            difficulty += choice == 0   ? "Easy"
+                          : choice == 1 ? "Medium"
+                                        : "Hard";
+            continue;
+        }
 
         sudoku.highlight_number(y, x);
 
         int start_y = board_y - info.size();
-        insert_colored(buffer, style_buffer, (screen_width / 2) - (title.size() / 2), start_y - 1, title, "\033[1m");
+        insert_colored(buffer, style_buffer,
+                       (screen_width / 2) - (title.size() / 2), start_y - 1,
+                       title, "\033[1m");
         for (size_t i = 0; i < info.size(); i++) {
-            insert_colored(buffer, style_buffer, (screen_width / 2) - (info[i].size() / 2), start_y + i, info[i], "\033[3;36m");
+            insert_colored(buffer, style_buffer,
+                           (screen_width / 2) - (info[i].size() / 2),
+                           start_y + i, info[i], "\033[3;36m");
         }
-
-        draw_horizontal_line(buffer, board_x, board_x + board_width, board_y, '-');
-
 
         insert_board(buffer, style_buffer, sudoku.get_board(), board_x,
                      board_y + 1);
+
+        insert_colored(buffer, style_buffer,
+                       (screen_width / 2) - (difficulty.size() / 2),
+                       board_y + 11 + 3, difficulty, "\033[1m");
         draw_buffer(buffer, style_buffer);
 
         if (!wait_for_input()) continue;
@@ -93,16 +132,22 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
             sudoku.complete_board();
         } else if (ch == 'r') {
             std::vector<std::string> y_or_n = {"Yes", "No"};
-            int cont = choice_popup(buffer, "Want to play another game?", y_or_n, screen_width);
+            int cont = choice_popup(buffer, "Want to play another game?",
+                                    y_or_n, screen_width);
             if (cont != 0) break;
-            int choice = choice_popup(buffer, "Difficulty", options, screen_width);
+            int choice =
+                choice_popup(buffer, "Difficulty", options, screen_width);
             sudoku.generate((choice + 1) * 20);
+            difficulty = "Current Difficulty: ";
+            difficulty += choice == 0   ? "Easy"
+                          : choice == 1 ? "Medium"
+                                        : "Hard";
         }
     }
 }
 
 int choice_popup(std::vector<std::string> &buffer, const std::string message,
-                 const std::vector<std::string>& options, int screen_width) {
+                 const std::vector<std::string> &options, int screen_width) {
     int width = 48;
     int height = 9;
     std::vector<std::string> center_buffer(height, std::string(width, ' '));
@@ -156,8 +201,10 @@ int choice_popup(std::vector<std::string> &buffer, const std::string message,
         int option_space = option_area_width / options.size();
 
         for (size_t i = 0; i < options.size(); ++i) {
-            int option_pos = option_start_pos + (option_space * i) + (option_space / 2) - (options[i].size() / 2);
-            insert_colored(center_buffer, style_buffer, option_pos, 6, options[i],
+            int option_pos = option_start_pos + (option_space * i) +
+                             (option_space / 2) - (options[i].size() / 2);
+            insert_colored(center_buffer, style_buffer, option_pos, 6,
+                           options[i],
                            static_cast<size_t>(choice) == i ? "\033[7;3m" : "");
         }
 
