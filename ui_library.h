@@ -9,18 +9,14 @@
 #include <string>
 #include <vector>
 
+#include "sudoku.h"
+
 namespace fs = std::filesystem;
 
 struct styling {
     size_t x;
     size_t y;
     const std::string styling;
-};
-
-struct point {
-    int value;
-    std::string style;
-    bool is_permanent;
 };
 
 void set_cursor_pos(int x, int y);
@@ -39,8 +35,8 @@ void insert_colored(std::vector<std::string> &buffer,
                     std::vector<styling> &styling, int x, int y,
                     const std::string message, const std::string colors);
 void insert_board(std::vector<std::string> &buffer,
-                  std::vector<styling> &style_buffer,
-                  std::vector<std::vector<point>> board, int x, int y);
+                  std::vector<styling> &style_buffer, Sudoku sudoku, int x,
+                  int y);
 void add_border(std::vector<std::string> &buffer, int width);
 void draw_horizontal_line(std::vector<std::string> &buffer, int x1, int x2,
                           int y, char character);

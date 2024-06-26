@@ -93,24 +93,23 @@ void insert_colored(std::vector<std::string> &buffer,
 }
 
 void insert_board(std::vector<std::string> &buffer,
-                  std::vector<styling> &style_buffer,
-                  std::vector<std::vector<point>> board, int x, int y) {
+                  std::vector<styling> &style_buffer, Sudoku sudoku, int x,
+                  int y) {
     int y_offset = 0;
-    for (size_t i = 0; i < board.size(); i++) {
+    for (size_t i = 0; i < 9; i++) {
         int x_offset = 0;
-        for (size_t j = 0; j < board.size(); j++) {
-            std::string ch = board[j][i].value == 0
-                                 ? "X"
-                                 : std::to_string(board[j][i].value);
+        for (size_t j = 0; j < 9; j++) {
+            point p = sudoku.get_point(i, j);
+            std::string ch = p.value == 0 ? "X" : std::to_string(p.value);
             insert_colored(buffer, style_buffer, x + (j * 3) + x_offset,
-                           y + i + y_offset, " " + ch + " ", board[j][i].style);
-            if ((j + 1) % 3 == 0 && j + 1 < board.size()) {
+                           y + i + y_offset, " " + ch + " ", p.style);
+            if ((j + 1) % 3 == 0 && j + 1 < 9) {
                 x_offset++;
                 insert_into_buffer(buffer, x + (j * 3) + x_offset + 2,
                                    y + i + y_offset, "|");
             }
         }
-        if ((i + 1) % 3 == 0 && i + 1 < board.size()) {
+        if ((i + 1) % 3 == 0 && i + 1 < 9) {
             y_offset++;
             draw_horizontal_line(buffer, x, x + 29, y + i + y_offset, '-');
         }

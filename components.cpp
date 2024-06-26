@@ -56,8 +56,8 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
                     style_buffer.clear();
                     sudoku.reset_style();
                     clear_buffer(buffer, screen_width);
-                    insert_board(buffer, style_buffer, sudoku.get_board(),
-                                 board_x, board_y + 1);
+                    insert_board(buffer, style_buffer, sudoku, board_x,
+                                 board_y + 1);
                     draw_buffer(buffer, style_buffer);
                     getchar();
                 }
@@ -86,8 +86,7 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
                            start_y + i, info[i], "\033[3;36m");
         }
 
-        insert_board(buffer, style_buffer, sudoku.get_board(), board_x,
-                     board_y + 1);
+        insert_board(buffer, style_buffer, sudoku, board_x, board_y + 1);
 
         insert_colored(buffer, style_buffer,
                        (screen_width / 2) - (difficulty.size() / 2),
@@ -106,20 +105,20 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
             ch = getchar();
             switch (ch) {
                 case 65:  // UP ARROW
-                    if (x == 0) continue;
-                    x--;
+                    if (y == 0) continue;
+                    y--;
                     break;
                 case 66:  // DOWN ARROW
-                    if (x == 8) continue;
-                    x++;
-                    break;
-                case 67:  // RIGHT ARROW
                     if (y == 8) continue;
                     y++;
                     break;
+                case 67:  // RIGHT ARROW
+                    if (x == 8) continue;
+                    x++;
+                    break;
                 case 68:  // LEFT ARROW
-                    if (y == 0) continue;
-                    y--;
+                    if (x == 0) continue;
+                    x--;
                     break;
             }
         } else if (ch == 'q') {
