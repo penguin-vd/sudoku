@@ -1,5 +1,5 @@
-#ifndef UI_LIB_H
-#define UI_LIB_H
+#pragma once
+
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -46,4 +46,3 @@ void add_tree_to_buffer(std::vector<std::string> &buffer,
                         int length, int highlight, int start_index);
 void set_raw_mode();
 void reset_raw_mode();
-#endif

@@ -1,5 +1,5 @@
-#ifndef SUDOKU_H
-#define SUDOKU_H
+#pragma once
+
 #include <array>
 #include <random>
 #include <vector>
@@ -40,4 +40,3 @@ class Sudoku {
     inline int get_index(int row, int col);
 };
 
-#endif
