@@ -125,7 +125,7 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
             break;
         } else if (ch >= 48 && ch <= 57) {
             sudoku.place_number(y, x, ch - 48);
-        } else if (ch == 'h') {
+        } else if (ch == 'i') {
             sudoku.place_hint();
         } else if (ch == 'f') {
             sudoku.complete_board();
@@ -141,6 +141,18 @@ void main_screen(std::vector<std::string> &buffer, int screen_width,
             difficulty += choice == 0   ? "Easy"
                           : choice == 1 ? "Medium"
                                         : "Hard";
+        } else if (ch == 'h') {
+            if (x == 0) continue;
+            x--;
+        } else if (ch == 'j') {
+            if (y == 8) continue;
+            y++;
+        } else if (ch == 'k') {
+            if (y == 0) continue;
+            y--;
+        } else if (ch == 'l') {
+            if (x == 8) continue;
+            x++;
         }
     }
 }
@@ -240,6 +252,10 @@ int choice_popup(std::vector<std::string> &buffer, const std::string message,
             break;
         } else if (ch == '\n') {
             break;
+        } else if (ch == 'l') {
+            choice = (choice + 1) % options.size();
+        } else if (ch == 'h') {
+            choice = (choice - 1 + options.size()) % options.size();
         }
     }
     return choice;

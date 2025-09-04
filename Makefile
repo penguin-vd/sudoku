@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -g
+CXXFLAGS = -Wall -Wextra -O3 -std=c++17
 SRCS = ui_library.cpp sudoku.cpp components.cpp main.cpp
 BUILD_DIR = build
 
